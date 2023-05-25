@@ -55,9 +55,9 @@ struct ScreenChar {
 }
 
 /// the height of the text buffer (normally 25 lines)
-const BUFFER_HEIGHT: usize = 25;
+pub const BUFFER_HEIGHT: usize = 25;
 /// the width of the text buffer (normally 80 Columns)
-const BUFFER_WIDTH: usize = 80;
+pub const BUFFER_WIDTH: usize = 80;
 
 /// A structure representing the VGA text buffer
 #[repr(transparent)]
@@ -173,4 +173,26 @@ macro_rules! println {
 pub fn _print(args: fmt::Arguments) {
     use core::fmt::Write;
     WRITER.lock().write_fmt(args).unwrap();
+}
+
+#[test_case]
+fn test_print_simple() {
+    println!("test_print_simple output!");
+}
+
+#[test_case]
+fn test_println_multi() {
+    for i in 0..200 {
+        println!("test_println_multi output -> line: {}", i);
+    }
+}
+
+#[test_case]
+fn test_println_output() {
+    let s = "Some test string that fits on a single line";
+    println!("{}", s);
+    for (i, c) in s.chars().enumerate() {
+        let screen_char = WRITER.lock().buffer.chars[BUFFER_HEIGHT - 2][i].read();
+        assert_eq!(char::from(screen_char.ascii_character), c);
+    }
 }
