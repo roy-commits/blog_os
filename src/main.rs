@@ -21,10 +21,16 @@ pub extern "C" fn _start() -> ! {
     //    )
     //    .unwrap();
     println!("Hello world {}", "!");
+
+    // call init() and create a breakpiont
+    blog_os::init();
+    x86_64::instructions::interrupts::int3();
+
     #[cfg(test)]
     test_main();
     // add panic handle
     // panic!("Some panic message");
+    println!("blog_os did not crash!");
     loop {}
 }
 
