@@ -24,7 +24,18 @@ pub extern "C" fn _start() -> ! {
 
     // call init() and create a breakpiont
     blog_os::init();
-    x86_64::instructions::interrupts::int3();
+    // trigger a page fault
+    //    unsafe {
+    //        *(0xdeadbeef as *mut u64) = 42;
+    //    };
+    //
+    // x86_64::instructions::interrupts::int3();
+
+    // stack_overflow
+    fn stack_overflow() {
+        stack_overflow();
+    }
+    stack_overflow();
 
     #[cfg(test)]
     test_main();
