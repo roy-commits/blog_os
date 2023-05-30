@@ -20,7 +20,7 @@ pub extern "C" fn _start() -> ! {
     //        1.337
     //    )
     //    .unwrap();
-    println!("Hello world {}", "!");
+    println!("blog_os is on starting {}", "...");
 
     // call init() and create a breakpiont
     blog_os::init();
@@ -31,25 +31,36 @@ pub extern "C" fn _start() -> ! {
     //
     // x86_64::instructions::interrupts::int3();
 
-    // stack_overflow
-    fn stack_overflow() {
-        stack_overflow();
-    }
-    stack_overflow();
+    // unconditional recursion => stack overflow
+    // stack_overflow();
 
     #[cfg(test)]
     test_main();
     // add panic handle
     // panic!("Some panic message");
     println!("blog_os did not crash!");
-    loop {}
+    //loop {
+    //    // simulate deadlock scenes
+    //    use blog_os::print;
+    //    for _ in 0..10000 {}
+    //    print!("-----");
+    //}
+
+    // use hlt loop
+    blog_os::hlt_loop();
+}
+
+#[allow(dead_code, unconditional_recursion)]
+fn stack_overflow() {
+    // println!("stack size: {:?}", stack.size);
+    stack_overflow();
 }
 
 #[cfg(not(test))]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    blog_os::hlt_loop();
 }
 
 // panic handler in test mode
